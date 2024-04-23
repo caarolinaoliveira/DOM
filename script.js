@@ -37,7 +37,7 @@ sintaxe básica do addEventListener
 
      longoBt.addEventListener('click',() => {
     html.setAttribute('data-contexto', 'descanso-longo')
-    banner.setAttribute('src', '/imagens/descanso-longo.png')
+    banner.setAttribute('src', './imagens/descanso-longo.png')
  })
 */
 focoBt.addEventListener('click', () => {
@@ -65,7 +65,7 @@ function alterarContexto(contexto){
         contexto.classList.remove('active')
     })
     html.setAttribute('data-contexto', contexto)
-    banner.setAttribute('src', `/imagens/${contexto}.png`)
+    banner.setAttribute('src', `./imagens/${contexto}.png`)
     switch(contexto) {
         case "foco": 
             titulo.innerHTML = `Otimize sua produtividade,<br>
