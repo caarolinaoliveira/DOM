@@ -23,7 +23,6 @@ focoBt.addEventListener('click', () => {
     alterarContexto('foco')
 })
 
-
 curtoBt.addEventListener('click', () => {
     alterarContexto('descanso-curto')
 })
