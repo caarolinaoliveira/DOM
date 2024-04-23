@@ -4,7 +4,28 @@ const curtoBt = document.querySelector('.app__card-button--curto')
 const longoBt = document.querySelector('.app__card-button--longo')
 const banner = document.querySelector('.app__image')
 const titulo = document.querySelector('.app__title')
+const botoes = document.querySelectorAll('.app__card-button')
+const musicaFocoInput = document.querySelector('#alternar-musica')
+const musica = new Audio ('/sons/luna-rise-part-one.mp3')
+musica.loop = true 
+const iniciarOuPausarBt = document.querySelector('#start-pause span')
+const tempoNaTela = document.querySelector('#timer')
+//sons
+const startPauseBt= document.querySelector('#start-pause')
+const audioPlay = new Audio('/sons/play.wav')
+const audioPausa = new Audio ('/sons/pause.mp3')
+const audioTempoFinalizado = new Audio ('/sons/beep.mp3')
 
+let tempoDecorridoEmSegundos = 1500
+let intervaloId =null
+// parte de musica com loop 
+musicaFocoInput.addEventListener('change', () => {
+    if (musica.paused) {
+        musica.play()
+    } else {
+        musica.pause()
+    }
+})
 /*  essa função acima é um evento simples que diz:
 quando clicar no botão 'descanso curto' o html será modificado pelo
 data attribute (data contexto) para o parâmetro foco
@@ -20,19 +41,29 @@ sintaxe básica do addEventListener
  })
 */
 focoBt.addEventListener('click', () => {
+    tempoDecorridoEmSegundos = 1500
     alterarContexto('foco')
+    focoBt.classList.add('active')
 })
 
 curtoBt.addEventListener('click', () => {
+    tempoDecorridoEmSegundos = 300
     alterarContexto('descanso-curto')
+    curtoBt.classList.add('active')
 })
 
  longoBt.addEventListener('click',() => {
+    tempoDecorridoEmSegundos = 900
     alterarContexto('descanso-longo')
+    longoBt.classList.add('active')
  })
 
 /* o evento banner.setAttribute altera a foto quando há um evento de clique botao foco*/
 function alterarContexto(contexto){
+    mostrarTempo()
+    botoes.forEach(function(contexto){
+        contexto.classList.remove('active')
+    })
     html.setAttribute('data-contexto', contexto)
     banner.setAttribute('src', `/imagens/${contexto}.png`)
     switch(contexto) {
@@ -52,5 +83,39 @@ function alterarContexto(contexto){
 
     }
 }
+// TEMPORIZADOR
+const contagemRegressiva = () => {
+    if (tempoDecorridoEmSegundos <=0){
+       audioTempoFinalizado.play()
+        alert('tempo finalizado')
+        zerar()
+        return
+    }
+    tempoDecorridoEmSegundos-=1
+    mostrarTempo()
+}
+startPauseBt.addEventListener('click', iniciarOuPausar)
 
+function iniciarOuPausar(){
+    if (intervaloId){
+        audioPausa.play()
+        zerar()
+        return
+    }
+    audioPlay.play()
+    intervaloId= setInterval (contagemRegressiva, 1000)
+    iniciarOuPausarBt.textContent = "Pausar"
+}
+function zerar(){
+    clearInterval(intervaloId)
+    iniciarOuPausarBt.textContent = "Começar"
+    intervaloId = null
+}
 
+function mostrarTempo(){
+    const tempo = new Date(tempoDecorridoEmSegundos *1000)
+    const tempoFormatado = tempo.toLocaleString('pt-Br', {minute:'2-digit', second: '2-digit'})
+    tempoNaTela.innerHTML = `${tempoFormatado}`
+}
+
+mostrarTempo()
